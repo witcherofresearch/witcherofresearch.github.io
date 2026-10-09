@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiwen Zhang</title>
+    <style>
+        /* ==========================================
+           1. 全局样式变量（你可以在这里一键改主题色和字体）
+           ========================================== */
+        :root {
+            --primary-color: #1a5276;    /* 主题色（暗蓝，可改为你喜欢的颜色） */
+            --text-dark: #2c3e50;        /* 标题文字颜色 */
+            --text-main: #333333;        /* 正文文字颜色 */
+            --text-muted: #666666;       /* 次要文字颜色 */
+            --bg-light: #f8f9fa;         /* 浅色背景 */
+            --accent-color: teal;     /* 强调色（如期刊年份） */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: #ffffff;
+        }
+
+        /* ==========================================
+           2. 响应式布局（大屏双栏，小屏自动切成单栏）
+           ========================================== */
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            gap: 50px;
+        }
+
+        /* 左侧固定侧边栏 */
+        .sidebar {
+            flex: 0 0 280px;
+            position: sticky;
+            top: 40px;
+            height: fit-content;
+            text-align: left;
+        }
+
+        /* 右侧可滚动主体内容 */
+        .main-content {
+            flex: 1;
+            min-width: 0; /* 防止内容撑破布局 */
+        }
+
+        /* ==========================================
+           3. 左侧边栏样式
+           ========================================== */
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .my-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .my-title {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            text-align: center; 
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 8px;
+        }
+
+        .contact-info a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* ==========================================
+           4. 右侧内容区样式（关于我、论文、动态等）
+           ========================================== */
+        section {
+            margin-bottom: 45px;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 6px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        /* 动态/新闻板块样式 */
+        .news-list {
+            list-style: none;
+        }
+
+        .news-item {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .news-date {
+            font-weight: bold;
+            color: var(--primary-color);
+            flex: 0 0 90px;
+        }
+
+        /* 论文列表项样式 */
+        .paper-item {
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .paper-item:hover {
+            background-color: var(--bg-light);
+        }
+
+        .paper-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .paper-authors {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        /* 自动加粗自己的名字，可以在HTML中手动用 <strong> 标签 */
+        .paper-venue {
+            font-size: 0.95rem;
+            color: var(--accent-color);
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .paper-links a {
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-right: 12px;
+            padding: none;
+            border: none;
+            color: var(--primary-color);
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        /* .paper-links a:hover {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        } */
+
+        /* ==========================================
+           5. 响应式媒体查询（手机端适配）
+           ========================================== */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 20px;
+                gap: 30px;
+            }
+            .sidebar {
+                flex: none;
+                position: static;
+                width: 100%;
+            }
+            .profile-img {
+                width: 140px;
+                height: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- ================= 左侧边栏 ================= -->
+        <aside class="sidebar">
+            <!-- 替换为你自己的照片，如果找不到会显示默认占位图 -->
+            <!-- <img src="avatar.jpg" alt="Your Photo" class="profile-img" onerror="this.src='https://placeholder.com'"> -->
+            <h1 class="my-name">Shiwen Zhang</h1>
+            <p class="my-title"></p>
+            
+            <div class="contact-info">
+                <p> If you have questions regarding my work, my models, my papers, please reach out to me via my personal  <a href="witcherofresearch@gmail.com">Email: </a>witcherofresearch@gmail.com</p>
+                <!-- <p> <a href="https://scholar.google.com/citations?user=uQtKrcgAAAAJ&hl=en" target="_blank">Google Scholar (Not maintained anymore)</a></p> -->
+                <p> <a href="https://github.com/witcherofresearch" target="_blank">GitHub Profile</a></p>
+            </div>
+        </aside>
+
+        <!-- ================= 右侧内容区 ================= -->
+        <main class="main-content">
+            
+            <!-- 关于我 -->
+            <section id="about">
+                
+                <p>Currently, I am a research staff at TeleAI since June 2025. Previously, I was a research expert at Bytedance since Jan 2024 and a senior engineer at Alibaba. My research focuses on multi-reference-guided image/video generation since 2022, and video understanding during 2018 to 2022. I have practical industrial experiences dealing with catastrophic forgetting problems when introducing new controllable generation capabilities to the foundation models, which is vital for continual learning and boosting foundation model performance.  I created and open-sourced TeleStyle V1 and V2 series for content-preserving style transfer given content reference and style reference, achieving comparable performance with closed-source competitors. I was the owner of style reference customization functionality in 即梦2.0 era. I got my bachelor degree from Tsinghua University in 2018.  </p>
+                <!-- <p><span style="color: teal; font-weight: bold;">I am open to new career opportunities, if you are interested, please feel free to contact me via my email.</span></p> -->
+            </section>
+
+            
+            <section id="news">
+                <h2>News</h2>
+                <ul class="news-list">
+                    <li class="news-item">
+                        <span class="news-date">2026.07</span>
+                        <span class="news-text">TeleStyle V2 supports SenseNova-U1, reinforces SenseNova U1 for Content-Preserving Style Transfer and preserves its general image editing capability.  </span>
+                    </li>
+                    <li class="news-item">
+                        <span class="news-date">2026.07</span>
+                        <span class="news-text"> Act2Cut is  accepted by SIGGRAPH Aisa 2026.</span>
+                    </li>
+                    <li class="news-item">
+                        <span class="news-date">2026.06</span>
+                        <span class="news-text"> TeleStyleV2 has been integrated by fal.ai at <a href="https://fal.ai/models/fal-ai/telestyle-v2/api" style="color: teal;" target="_blank">[fal-ai/telestyle-v2]</a> .</span>
+                    </li>
+                    <li class="news-item">
+                        <span class="news-date">2026.06</span>
+                        <span class="news-text"> TeleStyleV2 has been integrated by mlx-community at <a href="https://huggingface.co/mlx-community/TeleStyleV2-Qwen-Image-Edit-2511-bf16" style="color: teal;" target="_blank">[mlx-community/TeleStyleV2-Qwen-Image-Edit-2511-bf16]</a> .</span>
+                    </li>
+                    <li class="news-item">
+                        <span class="news-date">2026.03</span>
+                        <span class="news-text"> I release the <a href="http://arxiv.org/abs/2601.20175"style="color: teal;" target="_blank" target="_blank">technical report</a>, <a href="http://arxiv.org/abs/2601.20175"style="color: teal;" target="_blank" target="_blank">project </a>, <a href="http://arxiv.org/abs/2601.20175"style="color: teal;" target="_blank" target="_blank">code</a> and <a href="http://arxiv.org/abs/2601.20175"style="color: teal;" target="_blank" target="_blank">demo</a>  of TeleStyleV2.</span>
+                    </li>
+                    <li class="news-item">
+                        <span class="news-date">2026.03</span>
+                        <span class="news-text"> I finished training TeleStyleV2.</span>
+                    </li>
+                    <li class="news-item">
+                        <span class="news-date">2026.01</span>
+                        <span class="news-text">TeleStyleV1 got more than 1k upvotes on reddit community.</span>
+                    </li>
+                    
+                    
+                </ul>
+            </section>
+
+            <!-- 发表论文 -->
+            <section id="publications">
+                <h2>Selected Papers</h2>
+                
+                <!-- 论文 1 -->
+                <div class="paper-item">
+                    <div class="paper-title">[1] TeleStyle V2: Beyond Content-Preserving Style Transfer with Self-Distillation and Distribution-Matching-Distillation</div>
+                    <div class="paper-authors"><strong> Shiwen Zhang</strong>, Yifan Xu, et al</div>
+                    <div class="paper-venue">Tech Report</div>
+                    <div class="paper-links">
+                        <a href="https://arxiv.org/abs/2606.20709" target="_blank">Paper</a>
+                        <a href="https://github.com/Tele-AI/TeleStyleV2" target="_blank">Code</a>
+                        <a href="https://witcherofresearch.github.io/TeleStyleV2/" target="_blank">Project</a>
+                        <a href="https://huggingface.co/Tele-AI/TeleStyleV2" target="_blank">Model</a>
+                        <a href="https://huggingface.co/spaces/witcherderivia/TeleStyleV2" target="_blank">Demo</a>
+                        <a href="https://scholar.googleusercontent.com/scholar.bib?q=info:-rY_2zdnB_sJ:scholar.google.com/&output=citation&scisdr=CiARqwPiEOSu7Qy0Bnc:ACTRDVEAAAAAasiyHne5zhQmLtR8b3satxqts7c&scisig=ACTRDVEAAAAAasiyHo0HLp9N6_LKuRXgpjmt7gI&scisf=4&ct=citation&cd=-1&hl=en&scfhb=1" target="_blank">BibTeX</a>
+                    </div>
+                </div>
+
+                <!-- 论文 2 -->
+                <div class="paper-item">
+                    <div class="paper-title">[2] TeleStyle: Content-Preserving Style Transfer in Images and Videos </div>
+                    <div class="paper-authors"><strong>Shiwen Zhang</strong>, Xiaoyan Yang, Bojia Zi, et al</div>
+                    <div class="paper-venue">Tech Report</div>
+                    <div class="paper-links">
+                       <a href="https://arxiv.org/abs/2601.20175" target="_blank">Paper</a>
+                        <a href="https://github.com/Tele-AI/TeleStyle" target="_blank">Code</a>
+                        <!-- <a href="#" target="_blank">Project</a> -->
+                        <a href="https://huggingface.co/Tele-AI/TeleStyle" target="_blank">Model</a>
+                        <a href="https://huggingface.co/spaces/witcherderivia/TeleStyle" target="_blank">Demo</a>
+                        <a href="https://scholar.googleusercontent.com/scholar.bib?q=info:KrAHjlBAy24J:scholar.google.com/&output=citation&scisdr=CiARqwPiEOSu7Qy03-I:ACTRDVEAAAAAasiyx-JDYrafjaetDt3JyGpsUxg&scisig=ACTRDVEAAAAAasiyx-Nuz4azOiAfPCK5npAGwBg&scisf=4&ct=citation&cd=-1&hl=en&scfhb=1" target="_blank">BibTeX</a>
+                    </div>
+                </div>
+
+                <div class="paper-item">
+                    <div class="paper-title">[3]  QwenStyle: Content-Preserving Style Transfer with Qwen-Image-Edit </div>
+                    <div class="paper-authors"><strong>Shiwen Zhang</strong>, et al</div>
+                    <div class="paper-venue">Tech Report</div>
+                    <div class="paper-links">
+                       <a href="https://arxiv.org/abs/2601.06202" target="_blank">Paper</a>
+                        <a href="https://github.com/witcherofresearch/Qwen-Image-Style-Transfer" target="_blank">Code</a>
+                        <!-- <a href="#" target="_blank">Project</a> -->
+                        <a href="https://huggingface.co/witcherderivia/Qwen-Image-Style-Transfer" target="_blank">Model</a>
+                        <a href="https://huggingface.co/spaces/witcherderivia/QwenStyle" target="_blank">Demo</a>
+                        <a href="https://scholar.googleusercontent.com/scholar.bib?q=info:H3g65QwXpDYJ:scholar.google.com/&output=citation&scisdr=CiARqwPiEOSu7Qywt-Y:ACTRDVEAAAAAasi2r-bWDiRlrEDxwhELnnnS7E4&scisig=ACTRDVEAAAAAasi2rzLq-HV6uW_z620jVhaoLfI&scisf=4&ct=citation&cd=-1&hl=en&scfhb=1" target="_blank">BibTeX</a>
+                    </div>
+                </div>
+                <div class="paper-item">
+                    <div class="paper-title">[4] DreamO: A Unified Framework for Image Customization </div>
+                    <div class="paper-authors">Chong Mou, Yanze Wu, ..., <strong>Shiwen Zhang</strong>,..., et al</div>
+                    <div class="paper-venue">SIGGRAPH Asia 2025</div>
+                    <div class="paper-links">
+                       <a href="https://arxiv.org/abs/2504.16915" target="_blank">Paper</a>
+                        <a href="https://github.com/bytedance/DreamO" target="_blank">Code</a>
+                        <!-- <a href="#" target="_blank">Project</a> -->
+                        <a href="https://huggingface.co/ByteDance/DreamO" target="_blank">Model</a>
+                        <a href="https://huggingface.co/spaces/ByteDance/DreamO" target="_blank">Demo</a>
+                        <!-- <a href="#" target="_blank">BibTeX</a> -->
+                    </div>
+                </div>
+                <div class="paper-item">
+                    <div class="paper-title">[5] Act2Cut: Continuous Multi-Shot Video Narrative Match on Action-Cut </div>
+                    <div class="paper-authors">Cailin Zhuang, Yaoqi Hu, Zheng Dong, <strong>Shiwen Zhang</strong> et al</div>
+                    <div class="paper-venue">SIGGRAPH Asia 2026</div>
+                    <div class="paper-links">
+                       <a href="#" target="_blank">Paper</a>
+                        <!-- <a href="#" target="_blank">Code</a>
+                        <a href="#" target="_blank">Project</a>
+                        <a href="#" target="_blank">Model</a>
+                        <a href="#" target="_blank">Demo</a> -->
+                        <!-- <a href="#" target="_blank">BibTeX</a> -->
+                    </div>
+                </div>
+                <div class="paper-item">
+                    <div class="paper-title">[6] CDST: Color Disentangled Style Transfer for universal style transfer tasks </div>
+                    <div class="paper-authors"><strong>Shiwen Zhang</strong>, Zhuowei Chen, Lang Chen, Yanze Wu</div>
+                    <div class="paper-venue">Tech Report</div>
+                    <div class="paper-links">
+                       <a href="https://arxiv.org/abs/2506.13770" target="_blank">Paper</a>
+                        <!-- <a href="#" target="_blank">Code</a>
+                        <a href="#" target="_blank">Project</a>
+                        <a href="#" target="_blank">Model</a>
+                        <a href="#" target="_blank">Demo</a>
+                        <a href="#" target="_blank">BibTeX</a> -->
+                    </div>
+                </div>
+                <div class="paper-item">
+                    <div class="paper-title">[7]Fast Imagic: Solving Overfitting in Text-guided Image Editing via Disentangled UNet with Forgetting Mechanism and Unified Vision-Language Optimization</div>
+                    <div class="paper-authors"><strong> Shiwen Zhang</strong></div>
+                    <div class="paper-venue">NeurIPS 2024 WorkShop</div>
+                    <div class="paper-venue">PMLR 2024</div>
+                    <div class="paper-links">
+                        <a href="https://proceedings.mlr.press/v285/zhang24a.html" target="_blank">Paper</a>
+                        <a href="https://github.com/witcherofresearch/Forgedit" target="_blank">Code</a>
+                        <!-- <a href="#" target="_blank">Project</a>
+                        <a href="#" target="_blank">Model</a>
+                        <a href="#" target="_blank">Demo</a>
+                        <a href="#" target="_blank">BibTeX</a> -->
+                    </div>
+                </div>
+                <div class="paper-item">
+                    <div class="paper-title">[8] Forgedit: Text guided Image Editing with Diffusion Models via Learning and  Forgetting</div>
+                    <div class="paper-authors"><strong> Shiwen Zhang</strong>, Shuai Xiao, Weilin Huang</div>
+                    <div class="paper-venue">Tech Report</div>
+                    <div class="paper-links">
+                        <a href="https://arxiv.org/abs/2309.10556" target="_blank">Paper</a>
+                        <a href="https://github.com/witcherofresearch/Forgedit" target="_blank">Code</a>
+                        <!-- <a href="#" target="_blank">Project</a>
+                        <a href="#" target="_blank">Model</a>
+                        <a href="#" target="_blank">Demo</a>
+                        <a href="#" target="_blank">BibTeX</a> -->
+                    </div>
+                </div>
+                <div class="paper-item">
+                    <div class="paper-title">[9] TFCNet: Temporal Fully Connected Networks for static unbiased temporal reasoning</div>
+                    <div class="paper-authors"><strong> Shiwen Zhang</strong></div>
+                    <div class="paper-venue">Tech Report</div>
+                    <div class="paper-links">
+                        <a href="https://arxiv.org/abs/2203.05928" target="_blank">Paper</a>
+                        <!-- <a href="#" target="_blank">Code</a>
+                        <a href="#" target="_blank">Project</a>
+                        <a href="#" target="_blank">Model</a>
+                        <a href="#" target="_blank">Demo</a>
+                        <a href="#" target="_blank">BibTeX</a> -->
+                    </div>
+                </div>
+                <div class="paper-item">
+                    <div class="paper-title">[10] V4D: 4D Convolutional Neural Networks for Video-level Representation Learning</div>
+                    <div class="paper-authors"><strong> Shiwen Zhang</strong>, Sheng Guo, Weilin Huang, Matthew R. Scott and Limin Wang.</div>
+                    <div class="paper-venue">ICLR 2020</div>
+                    <div class="paper-links">
+                        <a href="https://arxiv.org/abs/2002.07442" target="_blank">Paper</a>
+                        <a href="https://github.com/msight-tech/research-v4d" target="_blank">Code</a>
+                        <!-- <a href="#" target="_blank">Project</a>
+                        <a href="#" target="_blank">Model</a>
+                        <a href="#" target="_blank">Demo</a>
+                        <a href="#" target="_blank">BibTeX</a> -->
+                    </div>
+                </div>
+                <div class="paper-item">
+                    <div class="paper-title">[11]  Knowledge Integration Networks for Action Recognition</div>
+                    <div class="paper-authors"><strong> Shiwen Zhang</strong>, Sheng Guo, Limin Wang, Weilin Huang and Matthew R. Scott.</div>
+                    <div class="paper-venue">AAAI 2020</div>
+                    <div class="paper-links">
+                        <a href="https://ojs.aaai.org/index.php/AAAI/article/view/6983" target="_blank">Paper</a>
+                        <!-- <a href="#" target="_blank">Code</a>
+                        <a href="#" target="_blank">Project</a>
+                        <a href="#" target="_blank">Model</a>
+                        <a href="#" target="_blank">Demo</a>
+                        <a href="#" target="_blank">BibTeX</a> -->
+                    </div>
+                </div>
+            </section>
+
+            
+             <section id="service">
+                <h2>Services</h2>
+                Reviewer of ICLR, NeurIPS, ICML, CVPR, ICCV, ECCV, SIGGRAPH Asia.
+             </section>
+            
+
+        </main>
+    </div>
+
+</body>
+</html>
